@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "gsfk",
+    "gsfk-dll"
+]
