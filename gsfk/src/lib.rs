@@ -3,6 +3,9 @@ pub use winey::WineyWindowImplementation as WindowImplementation;
 pub mod window;
 pub mod api;
 
+pub type WindowEvent = winey::WindowEvent;
+pub type ControlFlow = winey::window::ControlFlow;
+
 pub struct API<T> {
     context: T
 }
