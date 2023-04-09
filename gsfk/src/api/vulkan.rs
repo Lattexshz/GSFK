@@ -19,7 +19,7 @@ pub struct Vulkan {
 }
 
 impl Vulkan {
-    pub(crate) fn new(handle: RawWindowHandle,desc: VulkanAPIDescription) -> Self {
+    pub(crate) fn new() -> Self {
         Self {
 
         }

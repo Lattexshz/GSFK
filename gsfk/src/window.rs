@@ -5,16 +5,17 @@ use crate::{API, APIDescription};
 use crate::api::gl::{OpenGL, OpenGLAPIDescription};
 use crate::api::vulkan::{Vulkan, VulkanAPIDescription};
 
+#[repr(C)]
 pub struct Window {
     inner: winey::window::Window,
 }
 
 impl Window {
-    pub fn new_with_vulkan(title: &str,width: u32,height: u32,desc: VulkanAPIDescription) -> (Self,API<Vulkan>) {
+    pub fn new_with_vulkan(title: &str,width: u32,height: u32) -> (Self,API<Vulkan>) {
         let inner = winey::window::Window::new(title,width,height);
 
         let api = API {
-            context: Vulkan::new(inner.raw_window_handle(),desc),
+            context: Vulkan::new(),
         };
 
         (Self { inner },api)

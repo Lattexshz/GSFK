@@ -37,16 +37,18 @@ pub struct OpenGL {
 
 impl OpenGL {
     pub(crate) fn new(handle: RawWindowHandle,desc: OpenGLAPIDescription) -> Self {
-
         let inner = match handle {
             RawWindowHandle::UiKit(_) => todo!(),
             RawWindowHandle::AppKit(_) => todo!(),
             RawWindowHandle::Orbital(_) => todo!(),
-            RawWindowHandle::Xlib(_) => todo!(),
+            RawWindowHandle::Xlib(handle) => {
+                _OpenGL::new(handle.window,desc)
+            },
             RawWindowHandle::Xcb(_) => todo!(),
             RawWindowHandle::Wayland(_) => todo!(),
             RawWindowHandle::Drm(_) => todo!(),
             RawWindowHandle::Gbm(_) => todo!(),
+            #[cfg(target_os = "windows")]
             RawWindowHandle::Win32(handle) => {
                 _OpenGL::new(handle.hwnd,desc)
             }

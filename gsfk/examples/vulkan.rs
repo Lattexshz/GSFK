@@ -4,12 +4,7 @@ use gsfk::api::vulkan::{VulkanAPIDescription, VulkanAPIExt};
 use gsfk::window::Window;
 
 fn main() {
-    let desc = VulkanAPIDescription {
-        app_name: "Vulkan Window".to_string(),
-        engine_name: "My Vulkan engine".to_string(),
-    };
-
-    let (window,vulkan) = Window::new_with_vulkan("Vulkan Window!", 500, 500, desc);
+    let (window,vulkan) = Window::new_with_vulkan("Vulkan Window!", 500, 500);
     let vk = vulkan.get_api();
 
     let app_name = CString::new("Vulkan Window").unwrap();
@@ -32,7 +27,9 @@ fn main() {
     let instance = unsafe { entry.create_instance(&instance_info,None).unwrap() };
 
     let surface = vk.create_window_surface(&entry,&instance,&window).unwrap();
-    
+
+
+
     window.show();
     window.run(|event| {
 

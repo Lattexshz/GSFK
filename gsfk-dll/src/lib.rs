@@ -1,14 +1,20 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use std::ffi::{c_char, CStr};
+use gsfk::API;
+use gsfk::api::vulkan::Vulkan;
+use gsfk::window::Window;
+
+#[repr(C)]
+pub struct VulkanAPI {
+    api: API<Vulkan>
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[no_mangle]
+pub extern "C" fn gsfkCreateWindowWithVulkan(title: *const c_char, width: u32, height: u32, mut api: &mut VulkanAPI) -> *mut Window {
+    let (win, mut raw_api) = Window::new_with_vulkan(unsafe { CStr::from_ptr(title).to_str().unwrap() }, width, height);
+    let win = Box::new(win);
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+    let mut api = &mut *api;
+    api.api = raw_api;
+
+    Box::into_raw(win)
 }
