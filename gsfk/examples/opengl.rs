@@ -1,4 +1,4 @@
-use winey::WineyWindowImplementation;
+use gsfk::WindowImplementation;
 use gsfk::{API, APIDescription, Version};
 use gsfk::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
 use gsfk::api::vulkan::Vulkan;

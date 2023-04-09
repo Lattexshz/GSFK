@@ -1,5 +1,5 @@
 use std::ffi::CString;
-use winey::WineyWindowImplementation;
+use gsfk::WindowImplementation;
 use gsfk::api::vulkan::{VulkanAPIDescription, VulkanAPIExt};
 use gsfk::window::Window;
 

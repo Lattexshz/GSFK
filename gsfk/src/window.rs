@@ -1,8 +1,8 @@
 use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle, RawDisplayHandle, RawWindowHandle};
-use winey::{WindowEvent, WineyWindowImplementation};
+use winey::WindowEvent;
 use winey::window::ControlFlow;
 
-use crate::{API, APIDescription};
+use crate::{API, APIDescription, WindowImplementation};
 use crate::api::gl::{OpenGL, OpenGLAPIDescription};
 use crate::api::vulkan::{Vulkan, VulkanAPIDescription};
 
@@ -49,7 +49,7 @@ unsafe impl HasRawDisplayHandle for Window {
     }
 }
 
-impl WineyWindowImplementation for Window {
+impl WindowImplementation for Window {
     fn show(&self) {
         self.inner.show();
     }

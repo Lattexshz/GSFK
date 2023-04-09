@@ -1,3 +1,5 @@
+pub use winey::WineyWindowImplementation as WindowImplementation;
+
 pub mod window;
 pub mod api;
 

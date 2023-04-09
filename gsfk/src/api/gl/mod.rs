@@ -41,6 +41,7 @@ impl OpenGL {
             RawWindowHandle::UiKit(_) => todo!(),
             RawWindowHandle::AppKit(_) => todo!(),
             RawWindowHandle::Orbital(_) => todo!(),
+            #[cfg(target_os = "linux")]
             RawWindowHandle::Xlib(handle) => {
                 _OpenGL::new(handle.window,desc)
             },
