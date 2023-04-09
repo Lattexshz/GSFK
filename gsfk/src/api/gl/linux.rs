@@ -39,8 +39,7 @@ impl OpenGLAPIExt for _OpenGL {
 
     fn swap_buffers(&self) {
         unsafe {
-            println!("Swap");
-            x11::glx::glXMakeCurrent(self.display.as_raw(),self.window,self.glc.as_raw());
+            x11::glx::glXSwapBuffers(self.display.as_raw(),self.window);
         }
     }
 

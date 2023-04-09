@@ -1,5 +1,6 @@
 use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle, RawDisplayHandle, RawWindowHandle};
 use winey::{WindowEvent, WineyWindowImplementation};
+use winey::window::ControlFlow;
 
 use crate::{API, APIDescription};
 use crate::api::gl::{OpenGL, OpenGLAPIDescription};
@@ -31,7 +32,7 @@ impl Window {
         (Self { inner },api)
     }
 
-    pub fn run<C: FnMut(WindowEvent)>(&self, callback: C) {
+    pub fn run<C: FnMut(WindowEvent,&mut ControlFlow)>(&self, callback: C) {
         self.inner.run(callback);
     }
 }
