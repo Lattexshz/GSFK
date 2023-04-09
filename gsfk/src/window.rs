@@ -1,4 +1,4 @@
-use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
+use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle, RawDisplayHandle, RawWindowHandle};
 use winey::{WindowEvent, WineyWindowImplementation};
 
 use crate::{API, APIDescription};
@@ -32,6 +32,18 @@ impl Window {
 
     pub fn run<C: FnMut(WindowEvent)>(&self, callback: C) {
         self.inner.run(callback);
+    }
+}
+
+unsafe impl HasRawWindowHandle for Window {
+    fn raw_window_handle(&self) -> RawWindowHandle {
+        self.inner.raw_window_handle()
+    }
+}
+
+unsafe impl HasRawDisplayHandle for Window {
+    fn raw_display_handle(&self) -> RawDisplayHandle {
+        self.inner.raw_display_handle()
     }
 }
 

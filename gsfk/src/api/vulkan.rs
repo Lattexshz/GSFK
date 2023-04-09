@@ -1,55 +1,64 @@
-use std::ffi::CString;
+use std::ffi::{c_char, CString};
 use ash::{Entry, Instance};
-use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WindowsDisplayHandle};
+use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle, RawDisplayHandle, RawWindowHandle, WindowsDisplayHandle};
 use crate::{APIDescription};
+use crate::window::Window;
 
 pub struct VulkanAPIDescription {
-    app_name: String,
-    engine_name: String,
+    pub app_name: String,
+    pub engine_name: String,
 }
 
 pub trait VulkanAPIExt {
-
+    fn get_required_instance_extensions(&self,window: &Window) -> &[*const c_char];
+    fn create_window_surface(&self,entry: &ash::Entry,instance: &ash::Instance,window: &Window) -> Result<Surface,ash::vk::Result>;
 }
 
 pub struct Vulkan {
-    entry: Entry,
-    instance: Instance,
-    surface_khr: ash::vk::SurfaceKHR,
-    surface_fn: ash::extensions::khr::Surface
+
 }
 
 impl Vulkan {
     pub(crate) fn new(handle: RawWindowHandle,desc: VulkanAPIDescription) -> Self {
-        let entry = ash::Entry::linked();
-        let app_name = CString::new(desc.app_name).unwrap();
-        let engine_name = CString::new(desc.engine_name).unwrap();
-        let app_info = ash::vk::ApplicationInfo::builder()
-            .application_name(&app_name)
-            .engine_name(&engine_name)
-            .api_version(ash::vk::make_api_version(0,1,2,1))
-            .build();
+        Self {
 
-        let instance_extensions = ash_window::enumerate_required_extensions(RawDisplayHandle::Windows(WindowsDisplayHandle::empty())).unwrap();
+        }
+    }
+}
 
-        let instance_info = ash::vk::InstanceCreateInfo::builder()
-            .application_info(&app_info)
-            .enabled_extension_names(&instance_extensions)
-            .build();
+impl VulkanAPIExt for Vulkan {
+    fn get_required_instance_extensions(&self,window: &Window) -> &[*const c_char] {
+        ash_window::enumerate_required_extensions(window.raw_display_handle()).unwrap()
+    }
 
-        let instance = unsafe { entry.create_instance(&instance_info,None).unwrap() };
-
+    fn create_window_surface(&self,entry: &ash::Entry,instance: &ash::Instance,window: &Window) -> Result<Surface,ash::vk::Result> {
         let surface_khr = unsafe {
-            ash_window::create_surface(&entry, &instance, RawDisplayHandle::Windows(WindowsDisplayHandle::empty()), handle, None).unwrap()
+            match ash_window::create_surface(entry, instance, window.raw_display_handle(), window.raw_window_handle(), None) {
+                Ok(s) => s,
+                Err(e) => return Err(e)
+            }
         };
 
-        let surface_fn = ash::extensions::khr::Surface::new(&entry,&instance);
+        let surface_fn = ash::extensions::khr::Surface::new(entry,instance);
 
-        Self {
-            entry,
-            instance,
-            surface_khr,
-            surface_fn,
+        Ok(
+            Surface {
+                surface: surface_khr,
+                surface_fn
+            }
+        )
+    }
+}
+
+pub struct Surface {
+    surface: ash::vk::SurfaceKHR,
+    surface_fn: ash::extensions::khr::Surface
+}
+
+impl Drop for Surface {
+    fn drop(&mut self) {
+        unsafe {
+            self.surface_fn.destroy_surface(self.surface,None);
         }
     }
 }
