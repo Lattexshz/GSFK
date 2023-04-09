@@ -3,6 +3,15 @@ use ash::{Entry, Instance};
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle, WindowsDisplayHandle};
 use crate::{APIDescription};
 
+pub struct VulkanAPIDescription {
+    app_name: String,
+    engine_name: String,
+}
+
+pub trait VulkanAPIExt {
+
+}
+
 pub struct Vulkan {
     entry: Entry,
     instance: Instance,
@@ -11,10 +20,10 @@ pub struct Vulkan {
 }
 
 impl Vulkan {
-    pub(crate) fn new(handle: RawWindowHandle,desc: APIDescription) -> Self {
+    pub(crate) fn new(handle: RawWindowHandle,desc: VulkanAPIDescription) -> Self {
         let entry = ash::Entry::linked();
-        let app_name = CString::new("Vulkan Application").unwrap();
-        let engine_name = CString::new("Prism").unwrap();
+        let app_name = CString::new(desc.app_name).unwrap();
+        let engine_name = CString::new(desc.engine_name).unwrap();
         let app_info = ash::vk::ApplicationInfo::builder()
             .application_name(&app_name)
             .engine_name(&engine_name)

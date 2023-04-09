@@ -1,15 +1,16 @@
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
-use winey::WineyWindowImplementation;
+use winey::{WindowEvent, WineyWindowImplementation};
 
 use crate::{API, APIDescription};
-use crate::api::vulkan::Vulkan;
+use crate::api::gl::{OpenGL, OpenGLAPIDescription};
+use crate::api::vulkan::{Vulkan, VulkanAPIDescription};
 
 pub struct Window {
     inner: winey::window::Window,
 }
 
 impl Window {
-    pub fn new_with_vulkan(title: &str,width: u32,height: u32,desc: APIDescription) -> (Self,API<Vulkan>) {
+    pub fn new_with_vulkan(title: &str,width: u32,height: u32,desc: VulkanAPIDescription) -> (Self,API<Vulkan>) {
         let inner = winey::window::Window::new(title,width,height);
 
         let api = API {
@@ -17,6 +18,20 @@ impl Window {
         };
 
         (Self { inner },api)
+    }
+
+    pub fn new_with_opengl(title: &str,width: u32,height: u32,desc: OpenGLAPIDescription) -> (Self,API<OpenGL>) {
+        let inner = winey::window::Window::new(title,width,height);
+
+        let api = API {
+            context: OpenGL::new(inner.raw_window_handle(),desc),
+        };
+
+        (Self { inner },api)
+    }
+
+    pub fn run<C: FnMut(WindowEvent)>(&self, callback: C) {
+        self.inner.run(callback);
     }
 }
 
@@ -38,8 +53,5 @@ impl WineyWindowImplementation for Window {
     }
     fn set_undecorated(&self, undecorated: bool) {
         self.inner.set_undecorated(undecorated);
-    }
-    fn run<C: FnMut()>(&self, callback: C) {
-        self.inner.run(callback);
     }
 }
