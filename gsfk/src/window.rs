@@ -6,6 +6,8 @@ use crate::{API, APIDescription, WindowImplementation};
 use crate::api::gl::{OpenGL, OpenGLAPIDescription};
 use crate::api::vulkan::{Vulkan, VulkanAPIDescription};
 
+pub type WindowRect = winey::WindowRect;
+
 #[repr(C)]
 pub struct Window {
     inner: winey::window::Window,
@@ -67,5 +69,17 @@ impl WindowImplementation for Window {
     }
     fn set_undecorated(&self, undecorated: bool) {
         self.inner.set_undecorated(undecorated);
+    }
+
+    fn get_title(&self) -> String {
+        self.inner.get_title()
+    }
+
+    fn get_window_pos(&self) -> (u32, u32) {
+        self.inner.get_window_pos()
+    }
+
+    fn get_window_rect(&self) -> WindowRect {
+        self.inner.get_window_rect()
     }
 }
