@@ -1,6 +1,8 @@
-use std::ffi::{c_char, CStr};
+mod ffi;
+
+use std::ffi::{c_char, c_void, CStr};
 use gsfk::API;
-use gsfk::api::gl::{OpenGL, OpenGLAPIDescription};
+use gsfk::api::gl::{OpenGL, OpenGLAPIDescription, OpenGLAPIExt};
 use gsfk::api::vulkan::Vulkan;
 use gsfk::window::Window;
 use gsfk::WindowImplementation;
@@ -42,12 +44,40 @@ pub extern "C" fn gsfkCreateWindowWithVulkan(title: *const c_char, width: u32, h
 
 #[no_mangle]
 pub extern "C" fn gsfkShowWindow(window: *mut Window) {
-    let window = unsafe { &*window };
+    let window = value_from_ptr!(window);
     window.show();
 }
 
 #[no_mangle]
 pub extern "C" fn gsfkHideWindow(window: *mut Window) {
-    let window = unsafe { &*window };
+    let window = value_from_ptr!(window);
     window.hide();
+}
+
+// OpenGL API processes
+#[no_mangle]
+pub extern "C" fn gsfkGLMakeCurrent(gl: *mut OpenGLAPI) {
+    let gl = value_from_ptr!(gl);
+    gl.api.get_api().make_current();
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkGLSwapInterval(gl: *mut OpenGLAPI,bool: u32) {
+    let gl = value_from_ptr!(gl);
+
+    gl.api.get_api().swap_interval(bool != 0);
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkGLGetProcAddress(gl: *mut OpenGLAPI,addr: *const c_char) -> *const c_void {
+    let gl = value_from_ptr!(gl);
+    let addr = unsafe { CStr::from_ptr(addr) }.to_str().unwrap();
+
+    gl.api.get_api().get_proc_address(addr)
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkGLSwapBuffers(gl: *mut OpenGLAPI) {
+    let gl = value_from_ptr!(gl);
+    gl.api.get_api().swap_buffers();
 }
