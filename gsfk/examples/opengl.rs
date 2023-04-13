@@ -3,6 +3,7 @@ use gsfk::{API, APIDescription, Version};
 use gsfk::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
 use gsfk::api::vulkan::Vulkan;
 use gsfk::window::Window;
+use gsfk::platform::WindowExtForWindows;
 
 fn main() {
     let desc = OpenGLAPIDescription {

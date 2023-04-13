@@ -1,4 +1,5 @@
 use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle, RawDisplayHandle, RawWindowHandle};
+use winey::platform::{Margin, WindowCorner};
 use winey::WindowEvent;
 use winey::window::ControlFlow;
 
@@ -81,5 +82,28 @@ impl WindowImplementation for Window {
 
     fn get_window_rect(&self) -> WindowRect {
         self.inner.get_window_rect()
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl crate::platform::WindowExtForWindows for Window {
+    fn set_window_corner_radius(&self, corner: WindowCorner) {
+        self.inner.set_window_corner_radius(corner);
+    }
+
+    fn set_window_border_color(&self, r: u8, g: u8, b: u8) {
+        self.inner.set_window_border_color(r,g,b);
+    }
+
+    fn set_window_caption_color(&self, r: u8, g: u8, b: u8) {
+        self.inner.set_window_caption_color(r,g,b)
+    }
+
+    fn set_window_text_color(&self, r: u8, g: u8, b: u8) {
+        self.inner.set_window_text_color(r,g,b);
+    }
+
+    fn extend_frame_into_client_area(&self, rect: Margin) {
+        self.inner.extend_frame_into_client_area(rect);
     }
 }
