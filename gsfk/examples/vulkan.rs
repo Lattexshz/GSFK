@@ -31,7 +31,7 @@ fn main() {
 
 
     window.show();
-    window.run(|event| {
+    window.run(|event,flow| {
 
     })
 }
