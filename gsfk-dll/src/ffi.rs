@@ -1,5 +1,5 @@
 #[macro_export]
-macro_rules! value_from_ptr {
+macro_rules! ref_from_ptr {
     ($ptr:expr) => {
         if $ptr.is_null() {
             panic!("Passed pointer is null");
@@ -8,5 +8,12 @@ macro_rules! value_from_ptr {
                 &*$ptr
             }
         }
+    }
+}
+
+#[macro_export]
+macro_rules! BOOL {
+    ($integer:expr) => {
+        $integer != 0
     }
 }

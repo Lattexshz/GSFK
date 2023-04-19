@@ -44,33 +44,47 @@ pub extern "C" fn gsfkCreateWindowWithVulkan(title: *const c_char, width: u32, h
 
 #[no_mangle]
 pub extern "C" fn gsfkShowWindow(window: *mut Window) {
-    let window = value_from_ptr!(window);
+    let window = ref_from_ptr!(window);
     window.show();
 }
 
 #[no_mangle]
 pub extern "C" fn gsfkHideWindow(window: *mut Window) {
-    let window = value_from_ptr!(window);
+    let window = ref_from_ptr!(window);
     window.hide();
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkSetMaximizeWindow(window: *mut Window,b: u8) {
+    let maximize = BOOL!(b);
+    let window = ref_from_ptr!(window);
+    window.set_maximize(maximize);
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkSetMinimizeWindow(window: *mut Window,b: u8) {
+    let minimize = BOOL!(b);
+    let window = ref_from_ptr!(window);
+    window.set_minimize(minimize);
 }
 
 // OpenGL API processes
 #[no_mangle]
 pub extern "C" fn gsfkGLMakeCurrent(gl: *mut OpenGLAPI) {
-    let gl = value_from_ptr!(gl);
+    let gl = ref_from_ptr!(gl);
     gl.api.get_api().make_current();
 }
 
 #[no_mangle]
 pub extern "C" fn gsfkGLSwapInterval(gl: *mut OpenGLAPI,bool: u32) {
-    let gl = value_from_ptr!(gl);
+    let gl = ref_from_ptr!(gl);
 
     gl.api.get_api().swap_interval(bool != 0);
 }
 
 #[no_mangle]
 pub extern "C" fn gsfkGLGetProcAddress(gl: *mut OpenGLAPI,addr: *const c_char) -> *const c_void {
-    let gl = value_from_ptr!(gl);
+    let gl = ref_from_ptr!(gl);
     let addr = unsafe { CStr::from_ptr(addr) }.to_str().unwrap();
 
     gl.api.get_api().get_proc_address(addr)
@@ -78,6 +92,6 @@ pub extern "C" fn gsfkGLGetProcAddress(gl: *mut OpenGLAPI,addr: *const c_char) -
 
 #[no_mangle]
 pub extern "C" fn gsfkGLSwapBuffers(gl: *mut OpenGLAPI) {
-    let gl = value_from_ptr!(gl);
+    let gl = ref_from_ptr!(gl);
     gl.api.get_api().swap_buffers();
 }
