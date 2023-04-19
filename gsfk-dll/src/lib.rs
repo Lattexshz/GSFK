@@ -68,6 +68,20 @@ pub extern "C" fn gsfkSetMinimizeWindow(window: *mut Window,b: u8) {
     window.set_minimize(minimize);
 }
 
+#[no_mangle]
+pub extern "C" fn gsfkSetWindowTitle(window: *mut Window,title: *const c_char) {
+    let window = ref_from_ptr!(window);
+    let title = cstr_to_str!(title);
+    window.set_title(title);
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkSetWindowUndecorated(window: *mut Window,undecorated: u8) {
+    let window = ref_from_ptr!(window);
+    let undecorated = BOOL!(undecorated);
+    window.set_undecorated(undecorated);
+}
+
 // OpenGL API processes
 #[no_mangle]
 pub extern "C" fn gsfkGLMakeCurrent(gl: *mut OpenGLAPI) {

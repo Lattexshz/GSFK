@@ -12,6 +12,16 @@ macro_rules! ref_from_ptr {
 }
 
 #[macro_export]
+macro_rules! cstr_to_str {
+    ($ptr:expr) => {
+        match unsafe { CStr::from_ptr($ptr).to_str() } {
+            Ok(s) => s,
+            Err(e) => panic!("{}",e)
+        }
+    }
+}
+
+#[macro_export]
 macro_rules! BOOL {
     ($integer:expr) => {
         $integer != 0
