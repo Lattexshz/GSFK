@@ -1,11 +1,13 @@
-use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle, RawDisplayHandle, RawWindowHandle};
+use raw_window_handle::{
+    HasRawDisplayHandle, HasRawWindowHandle, RawDisplayHandle, RawWindowHandle,
+};
 use winey::platform::{Margin, WindowCorner};
-use winey::WindowEvent;
 use winey::window::ControlFlow;
+use winey::WindowEvent;
 
-use crate::{API, APIDescription, WindowImplementation};
 use crate::api::gl::{OpenGL, OpenGLAPIDescription};
-use crate::api::vulkan::{Vulkan, VulkanAPIDescription};
+use crate::api::vulkan::{Vulkan};
+use crate::{WindowImplementation, API};
 
 pub type WindowRect = winey::WindowRect;
 pub type WindowLevel = winey::WindowLevel;
@@ -18,27 +20,32 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn new_with_vulkan(title: &str,width: u32,height: u32) -> (Self,API<Vulkan>) {
-        let inner = winey::window::Window::new(title,width,height);
+    pub fn new_with_vulkan(title: &str, width: u32, height: u32) -> (Self, API<Vulkan>) {
+        let inner = winey::window::Window::new(title, width, height);
 
         let api = API {
             context: Vulkan::new(),
         };
 
-        (Self { inner },api)
+        (Self { inner }, api)
     }
 
-    pub fn new_with_opengl(title: &str,width: u32,height: u32,desc: OpenGLAPIDescription) -> (Self,API<OpenGL>) {
-        let inner = winey::window::Window::new(title,width,height);
+    pub fn new_with_opengl(
+        title: &str,
+        width: u32,
+        height: u32,
+        desc: OpenGLAPIDescription,
+    ) -> (Self, API<OpenGL>) {
+        let inner = winey::window::Window::new(title, width, height);
 
         let api = API {
-            context: OpenGL::new(inner.raw_window_handle(),desc),
+            context: OpenGL::new(inner.raw_window_handle(), desc),
         };
 
-        (Self { inner },api)
+        (Self { inner }, api)
     }
 
-    pub fn run<C: FnMut(WindowEvent,&mut ControlFlow)>(&self, callback: C) {
+    pub fn run<C: FnMut(WindowEvent, &mut ControlFlow)>(&self, callback: C) {
         self.inner.run(callback);
     }
 }
@@ -107,15 +114,15 @@ impl crate::platform::WindowExtForWindows for Window {
     }
 
     fn set_window_border_color(&self, r: u8, g: u8, b: u8) {
-        self.inner.set_window_border_color(r,g,b);
+        self.inner.set_window_border_color(r, g, b);
     }
 
     fn set_window_caption_color(&self, r: u8, g: u8, b: u8) {
-        self.inner.set_window_caption_color(r,g,b)
+        self.inner.set_window_caption_color(r, g, b)
     }
 
     fn set_window_text_color(&self, r: u8, g: u8, b: u8) {
-        self.inner.set_window_text_color(r,g,b);
+        self.inner.set_window_text_color(r, g, b);
     }
 
     fn extend_frame_into_client_area(&self, rect: Margin) {

@@ -1,4 +1,5 @@
 ![GSFK logo](res/GSFK.png)
+[![Lines of code](https://tokei.rs/b1/github/Lattexshz/GSFK)](https://github.com/Lattexshz/GSFK)  
 GSFK is an open source, cross-platform library for creating contexts and  
 managing windows for each graphics API. 
 

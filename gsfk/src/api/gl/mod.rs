@@ -1,6 +1,6 @@
-use std::ffi::c_void;
+
 use raw_window_handle::RawWindowHandle;
-use crate::APIDescription;
+use std::ffi::c_void;
 
 mod sys;
 
@@ -22,37 +22,33 @@ pub use self::windows::*;
 pub trait OpenGLAPIExt {
     fn make_current(&self);
     fn swap_buffers(&self);
-    fn swap_interval(&self,interval: bool);
-    fn get_proc_address(&self,addr: &str) -> *const c_void;
+    fn swap_interval(&self, interval: bool);
+    fn get_proc_address(&self, addr: &str) -> *const c_void;
 }
 
 pub struct OpenGLAPIDescription {
     pub version_major: u32,
-    pub version_minor: u32
+    pub version_minor: u32,
 }
 
 pub struct OpenGL {
-    inner: _OpenGL
+    inner: _OpenGL,
 }
 
 impl OpenGL {
-    pub(crate) fn new(handle: RawWindowHandle,desc: OpenGLAPIDescription) -> Self {
+    pub(crate) fn new(handle: RawWindowHandle, desc: OpenGLAPIDescription) -> Self {
         let inner = match handle {
             RawWindowHandle::UiKit(_) => todo!(),
             RawWindowHandle::AppKit(_) => todo!(),
             RawWindowHandle::Orbital(_) => todo!(),
             #[cfg(target_os = "linux")]
-            RawWindowHandle::Xlib(handle) => {
-                _OpenGL::new(handle.window,desc)
-            },
+            RawWindowHandle::Xlib(handle) => _OpenGL::new(handle.window, desc),
             RawWindowHandle::Xcb(_) => todo!(),
             RawWindowHandle::Wayland(_) => todo!(),
             RawWindowHandle::Drm(_) => todo!(),
             RawWindowHandle::Gbm(_) => todo!(),
             #[cfg(target_os = "windows")]
-            RawWindowHandle::Win32(handle) => {
-                _OpenGL::new(handle.hwnd,desc)
-            }
+            RawWindowHandle::Win32(handle) => _OpenGL::new(handle.hwnd, desc),
             RawWindowHandle::WinRt(_) => todo!(),
             RawWindowHandle::Web(_) => todo!(),
             RawWindowHandle::AndroidNdk(_) => todo!(),
@@ -60,9 +56,7 @@ impl OpenGL {
             _ => todo!(),
         };
 
-        Self {
-            inner
-        }
+        Self { inner }
     }
 }
 
@@ -79,7 +73,7 @@ impl OpenGLAPIExt for OpenGL {
         self.inner.swap_interval(interval);
     }
 
-    fn get_proc_address(&self,addr: &str) -> *const c_void {
+    fn get_proc_address(&self, addr: &str) -> *const c_void {
         self.inner.get_proc_address(addr)
     }
 }

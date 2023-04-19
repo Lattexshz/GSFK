@@ -1,24 +1,24 @@
+use crate::api::gl::sys::{wgl, wgl_extra, WGLARBFunctions};
+use crate::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
+
+
 use std::ffi::{c_void, CString, OsStr};
 use std::os::windows::ffi::OsStrExt;
 use std::ptr::{addr_of, null_mut};
-use raw_window_handle::RawWindowHandle;
-use winapi::shared::ntdef::PCSTR;
+
 use winapi::shared::windef::{HGLRC, HWND};
-use winapi::um::libloaderapi::{GetModuleHandleA, GetProcAddress, LoadLibraryW};
+use winapi::um::libloaderapi::{GetProcAddress, LoadLibraryW};
 use winapi::um::wingdi::*;
 use winapi::um::winuser::*;
-use crate::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
-use crate::api::gl::sys::{wgl, wgl_extra, WGLARBFunctions};
-use crate::APIDescription;
 
 pub struct _OpenGL {
     context: HGLRC,
     func: WGLARBFunctions,
-    hwnd: HWND
+    hwnd: HWND,
 }
 
 impl _OpenGL {
-    pub(crate) fn new(handle: *mut c_void,desc: OpenGLAPIDescription) -> Self {
+    pub(crate) fn new(handle: *mut c_void, desc: OpenGLAPIDescription) -> Self {
         let hwnd = handle as HWND;
         unsafe {
             let pfd = PIXELFORMATDESCRIPTOR {
@@ -74,13 +74,12 @@ impl _OpenGL {
             let ctx =
                 (func.wglCreateContextAttribsARB)(hdc as wgl_extra::types::HDC, null_mut(), &att);
 
-
             wgl::DeleteContext(old_ctx);
 
             Self {
                 context: ctx as HGLRC,
                 func,
-                hwnd
+                hwnd,
             }
         }
     }
@@ -89,7 +88,10 @@ impl _OpenGL {
 impl OpenGLAPIExt for _OpenGL {
     fn make_current(&self) {
         unsafe {
-            wgl::MakeCurrent(GetDC(self.hwnd) as wgl::types::HDC, self.context as *const c_void);
+            wgl::MakeCurrent(
+                GetDC(self.hwnd) as wgl::types::HDC,
+                self.context as *const c_void,
+            );
         }
     }
 
@@ -103,12 +105,14 @@ impl OpenGLAPIExt for _OpenGL {
         (self.func.wglSwapIntervalEXT)(interval as u32)
     }
 
-    fn get_proc_address(&self,addr: &str) -> *const c_void {
+    fn get_proc_address(&self, addr: &str) -> *const c_void {
         let addr = CString::new(addr.as_bytes()).unwrap();
         let addr = addr.as_ptr();
 
-        let name =
-            OsStr::new("opengl32.dll").encode_wide().chain(Some(0).into_iter()).collect::<Vec<_>>();
+        let name = OsStr::new("opengl32.dll")
+            .encode_wide()
+            .chain(Some(0).into_iter())
+            .collect::<Vec<_>>();
 
         let lib = unsafe { LoadLibraryW(name.as_ptr()) };
 

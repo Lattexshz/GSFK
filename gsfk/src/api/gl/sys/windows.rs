@@ -15,11 +15,11 @@ pub type WGLCREATECONTEXTATTRIBSARBPROC = fn(
     attribs: &[wgl_extra::types::GLenum],
 ) -> wgl_extra::types::HGLRC;
 
-pub type WGLSWAPINTERVALEXTPROC = fn(i:u32);
+pub type WGLSWAPINTERVALEXTPROC = fn(i: u32);
 
 pub struct WGLARBFunctions {
     pub wglCreateContextAttribsARB: WGLCREATECONTEXTATTRIBSARBPROC,
-    pub wglSwapIntervalEXT: WGLSWAPINTERVALEXTPROC
+    pub wglSwapIntervalEXT: WGLSWAPINTERVALEXTPROC,
 }
 
 impl WGLARBFunctions {

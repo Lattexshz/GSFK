@@ -1,6 +1,6 @@
 #[cfg(target_os = "windows")]
-pub use winey::platform::WindowExtForWindows as WindowExtForWindows;
+pub use winey::platform::Margin;
 #[cfg(target_os = "windows")]
-pub use winey::platform::WindowCorner as WindowCorner;
+pub use winey::platform::WindowCorner;
 #[cfg(target_os = "windows")]
-pub use winey::platform::Margin as Margin;
+pub use winey::platform::WindowExtForWindows;

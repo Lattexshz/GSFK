@@ -1,10 +1,10 @@
-use std::ffi::CString;
-use gsfk::WindowImplementation;
-use gsfk::api::vulkan::{VulkanAPIDescription, VulkanAPIExt};
+use gsfk::api::vulkan::{VulkanAPIExt};
 use gsfk::window::Window;
+use gsfk::WindowImplementation;
+use std::ffi::CString;
 
 fn main() {
-    let (window,vulkan) = Window::new_with_vulkan("Vulkan Window!", 500, 500);
+    let (window, vulkan) = Window::new_with_vulkan("Vulkan Window!", 500, 500);
     let vk = vulkan.get_api();
 
     let app_name = CString::new("Vulkan Window").unwrap();
@@ -12,7 +12,7 @@ fn main() {
     let app_info = ash::vk::ApplicationInfo::builder()
         .application_name(&app_name)
         .engine_name(&engine_name)
-        .api_version(ash::vk::make_api_version(0,1,2,1))
+        .api_version(ash::vk::make_api_version(0, 1, 2, 1))
         .build();
 
     let entry = ash::Entry::linked();
@@ -24,14 +24,12 @@ fn main() {
         .enabled_extension_names(&required_extensions)
         .build();
 
-    let instance = unsafe { entry.create_instance(&instance_info,None).unwrap() };
+    let instance = unsafe { entry.create_instance(&instance_info, None).unwrap() };
 
-    let surface = vk.create_window_surface(&entry,&instance,&window).unwrap();
-
-
+    let _surface = vk
+        .create_window_surface(&entry, &instance, &window)
+        .unwrap();
 
     window.show();
-    window.run(|event,flow| {
-
-    })
+    window.run(|_event, _flow| {})
 }
