@@ -11,3 +11,4 @@ name = "gsfk1"
 
 [dependencies]
 gsfk = { version = "0.1.0", path = "../gsfk" }
+once_cell = "1.17.1"

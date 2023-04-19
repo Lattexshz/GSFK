@@ -20,7 +20,7 @@ fn main() {
     gl.swap_interval(true);
 
     window.show();
-    window.run(|_event, _control_flow| unsafe {
+    window.run(|event, _control_flow| unsafe {
         gl::ClearColor(1.0, 0.0, 0.0, 1.0);
         gl::Clear(gl::COLOR_BUFFER_BIT);
         gl.swap_buffers();

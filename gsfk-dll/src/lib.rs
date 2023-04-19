@@ -3,9 +3,12 @@ mod ffi;
 use gsfk::api::gl::{OpenGL, OpenGLAPIDescription, OpenGLAPIExt};
 use gsfk::api::vulkan::Vulkan;
 use gsfk::window::Window;
-use gsfk::WindowImplementation;
+use gsfk::{WindowEvent, WindowImplementation};
 use gsfk::API;
 use std::ffi::{c_char, c_void, CStr};
+use std::sync::{LockResult, Mutex};
+use once_cell::sync::OnceCell;
+
 
 #[repr(C)]
 pub struct VulkanAPI {
@@ -22,7 +25,7 @@ pub extern "C" fn gsfkCreateWindowWithOpenGL(
     title: *const c_char,
     width: u32,
     height: u32,
-    api: &mut OpenGLAPI,
+    api: *mut OpenGLAPI,
 ) -> *mut Window {
     let (win, raw_api) = Window::new_with_opengl(
         unsafe { CStr::from_ptr(title).to_str().unwrap() },
@@ -35,7 +38,7 @@ pub extern "C" fn gsfkCreateWindowWithOpenGL(
     );
     let win = Box::new(win);
 
-    let mut api = &mut *api;
+    let mut api = unsafe { &mut *api };
     api.api = raw_api;
 
     Box::into_raw(win)
@@ -46,7 +49,7 @@ pub extern "C" fn gsfkCreateWindowWithVulkan(
     title: *const c_char,
     width: u32,
     height: u32,
-    api: &mut VulkanAPI,
+    api: *mut VulkanAPI,
 ) -> *mut Window {
     let (win, raw_api) = Window::new_with_vulkan(
         unsafe { CStr::from_ptr(title).to_str().unwrap() },
@@ -55,7 +58,7 @@ pub extern "C" fn gsfkCreateWindowWithVulkan(
     );
     let win = Box::new(win);
 
-    let mut api = &mut *api;
+    let mut api = unsafe { &mut *api };
     api.api = raw_api;
 
     Box::into_raw(win)
@@ -101,6 +104,49 @@ pub extern "C" fn gsfkSetWindowUndecorated(window: *mut Window, undecorated: u8)
     window.set_undecorated(undecorated);
 }
 
+#[no_mangle]
+pub extern "C" fn gsfkRunWindow(window: *mut Window) {
+    let window = ref_from_ptr!(window);
+    window.run(|event,control_flow| {
+        match event {
+            WindowEvent::Update => {
+                match UPDATE_REQUESTED.lock() {
+                    Ok(s) => {
+                        match s.get() {
+                            None => {}
+                            Some(c) => {
+                                c();
+                            }
+                        }
+                    }
+                    Err(_) => {}
+                }
+            }
+            WindowEvent::KeyDown(_) => {}
+            WindowEvent::KeyUp(_) => {}
+            WindowEvent::RedrawRequested => {
+                println!("Redraw");
+                match REDRAW_REQUESTED.lock().unwrap().get() {
+                    None => {
+                        println!("None");
+                    }
+                    Some(c) => {
+                        c();
+                    }
+                }
+            }
+            WindowEvent::CloseRequested => {
+                match CLOSE_REQUESTED.lock().unwrap().get() {
+                    None => {}
+                    Some(c) => {
+                        c();
+                    }
+                }
+            }
+        }
+    })
+}
+
 // OpenGL API processes
 #[no_mangle]
 pub extern "C" fn gsfkGLMakeCurrent(gl: *mut OpenGLAPI) {
@@ -127,4 +173,28 @@ pub extern "C" fn gsfkGLGetProcAddress(gl: *mut OpenGLAPI, addr: *const c_char) 
 pub extern "C" fn gsfkGLSwapBuffers(gl: *mut OpenGLAPI) {
     let gl = ref_from_ptr!(gl);
     gl.api.get_api().swap_buffers();
+}
+
+// Callbacks
+pub type UPDATECALLBACK = extern "C" fn();
+pub type REDRAWREQUESTEDCALLBACK = extern "C" fn();
+pub type CLOSEREQUESTEDCALLBACK = extern "C" fn();
+
+static UPDATE_REQUESTED:Mutex<OnceCell<UPDATECALLBACK>> = Mutex::new(OnceCell::new());
+static REDRAW_REQUESTED:Mutex<OnceCell<REDRAWREQUESTEDCALLBACK>> = Mutex::new(OnceCell::new());
+static CLOSE_REQUESTED:Mutex<OnceCell<CLOSEREQUESTEDCALLBACK>> = Mutex::new(OnceCell::new());
+
+#[no_mangle]
+pub extern "C" fn gsfkSetUpdatedCallback(callback: UPDATECALLBACK) {
+    REDRAW_REQUESTED.lock().unwrap().set(callback).unwrap();
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkSetRedrawRequestedCallback(callback: REDRAWREQUESTEDCALLBACK) {
+    REDRAW_REQUESTED.lock().unwrap().set(callback).unwrap();
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkSetCloseRequestedCallback(callback: CLOSEREQUESTEDCALLBACK) {
+    REDRAW_REQUESTED.lock().unwrap().set(callback).unwrap();
 }

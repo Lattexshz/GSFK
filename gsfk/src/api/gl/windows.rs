@@ -97,7 +97,8 @@ impl OpenGLAPIExt for _OpenGL {
 
     fn swap_buffers(&self) {
         unsafe {
-            SwapBuffers(GetDC(self.hwnd));
+            let dc = GetDC(self.hwnd);
+            SwapBuffers(dc);
         }
     }
 
