@@ -5,9 +5,11 @@ use winey::platform::{Margin, WindowCorner};
 use winey::window::ControlFlow;
 use winey::WindowEvent;
 
+#[cfg(feature = "gl")]
 use crate::api::gl::{OpenGL, OpenGLAPIDescription};
+#[cfg(feature = "vulkan")]
 use crate::api::vulkan::{Vulkan};
-use crate::{WindowImplementation, API};
+use crate::{API, WindowImplementation};
 
 pub type WindowRect = winey::WindowRect;
 pub type WindowLevel = winey::WindowLevel;
@@ -20,6 +22,7 @@ pub struct Window {
 }
 
 impl Window {
+    #[cfg(feature = "vulkan")]
     pub fn new_with_vulkan(title: &str, width: u32, height: u32) -> (Self, API<Vulkan>) {
         let inner = winey::window::Window::new(title, width, height);
 
@@ -30,6 +33,7 @@ impl Window {
         (Self { inner }, api)
     }
 
+    #[cfg(feature = "gl")]
     pub fn new_with_opengl(
         title: &str,
         width: u32,
