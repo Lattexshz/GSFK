@@ -1,7 +1,5 @@
 use winey::WindowEvent;
 use gsfk::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
-
-
 use gsfk::window::Window;
 use gsfk::WindowImplementation;
 
