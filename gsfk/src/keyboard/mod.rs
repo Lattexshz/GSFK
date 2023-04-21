@@ -1,51 +1,38 @@
-#[cfg(target_os = "linux")]
-pub(crate) mod linux;
-#[cfg(target_os = "linux")]
-pub(crate) use self::linux::*;
+use winey::keyboard::*;
 
-#[cfg(target_os = "macos")]
-pub(crate) mod macos;
-#[cfg(target_os = "macos")]
-pub(crate) use self::macos::*;
+pub type VirtualKeyCode = winey::keyboard::VirtualKeyCode;
 
-#[cfg(target_os = "windows")]
-pub(crate) mod windows;
-#[cfg(target_os = "windows")]
-pub(crate) use self::windows::*;
+pub const GSFK_KEY_A: VirtualKeyCode = KEY_A;
+pub const GSFK_KEY_B: VirtualKeyCode = KEY_B;
+pub const GSFK_KEY_C: VirtualKeyCode = KEY_C;
+pub const GSFK_KEY_D: VirtualKeyCode = KEY_D;
+pub const GSFK_KEY_E: VirtualKeyCode = KEY_E;
+pub const GSFK_KEY_F: VirtualKeyCode = KEY_F;
+pub const GSFK_KEY_G: VirtualKeyCode = KEY_G;
+pub const GSFK_KEY_H: VirtualKeyCode = KEY_H;
+pub const GSFK_KEY_I: VirtualKeyCode = KEY_I;
+pub const GSFK_KEY_J: VirtualKeyCode = KEY_J;
+pub const GSFK_KEY_K: VirtualKeyCode = KEY_K;
+pub const GSFK_KEY_L: VirtualKeyCode = KEY_L;
+pub const GSFK_KEY_M: VirtualKeyCode = KEY_M;
+pub const GSFK_KEY_N: VirtualKeyCode = KEY_N;
+pub const GSFK_KEY_O: VirtualKeyCode = KEY_O;
+pub const GSFK_KEY_P: VirtualKeyCode = KEY_P;
+pub const GSFK_KEY_Q: VirtualKeyCode = KEY_Q;
+pub const GSFK_KEY_R: VirtualKeyCode = KEY_R;
+pub const GSFK_KEY_S: VirtualKeyCode = KEY_S;
+pub const GSFK_KEY_T: VirtualKeyCode = KEY_T;
+pub const GSFK_KEY_U: VirtualKeyCode = KEY_U;
+pub const GSFK_KEY_V: VirtualKeyCode = KEY_V;
+pub const GSFK_KEY_W: VirtualKeyCode = KEY_W;
+pub const GSFK_KEY_X: VirtualKeyCode = KEY_X;
+pub const GSFK_KEY_Y: VirtualKeyCode = KEY_Y;
+pub const GSFK_KEY_Z: VirtualKeyCode = KEY_Z;
 
-pub type VirtualKeyCode = u32;
+pub const GSFK_KEY_BACKSPACE: VirtualKeyCode = KEY_BACKSPACE;
+pub const GSFK_KEY_SHIFT:VirtualKeyCode = KEY_SHIFT;
+pub const GSFK_KEY_TAB: VirtualKeyCode = KEY_TAB;
 
-pub const GSFK_KEY_A: VirtualKeyCode = vk::GSFK_KEY_A as VirtualKeyCode;
-pub const GSFK_KEY_B: VirtualKeyCode = vk::GSFK_KEY_B as VirtualKeyCode;
-pub const GSFK_KEY_C: VirtualKeyCode = vk::GSFK_KEY_C as VirtualKeyCode;
-pub const GSFK_KEY_D: VirtualKeyCode = vk::GSFK_KEY_D as VirtualKeyCode;
-pub const GSFK_KEY_E: VirtualKeyCode = vk::GSFK_KEY_E as VirtualKeyCode;
-pub const GSFK_KEY_F: VirtualKeyCode = vk::GSFK_KEY_F as VirtualKeyCode;
-pub const GSFK_KEY_G: VirtualKeyCode = vk::GSFK_KEY_G as VirtualKeyCode;
-pub const GSFK_KEY_H: VirtualKeyCode = vk::GSFK_KEY_H as VirtualKeyCode;
-pub const GSFK_KEY_I: VirtualKeyCode = vk::GSFK_KEY_I as VirtualKeyCode;
-pub const GSFK_KEY_J: VirtualKeyCode = vk::GSFK_KEY_J as VirtualKeyCode;
-pub const GSFK_KEY_K: VirtualKeyCode = vk::GSFK_KEY_K as VirtualKeyCode;
-pub const GSFK_KEY_L: VirtualKeyCode = vk::GSFK_KEY_L as VirtualKeyCode;
-pub const GSFK_KEY_M: VirtualKeyCode = vk::GSFK_KEY_M as VirtualKeyCode;
-pub const GSFK_KEY_N: VirtualKeyCode = vk::GSFK_KEY_N as VirtualKeyCode;
-pub const GSFK_KEY_O: VirtualKeyCode = vk::GSFK_KEY_O as VirtualKeyCode;
-pub const GSFK_KEY_P: VirtualKeyCode = vk::GSFK_KEY_P as VirtualKeyCode;
-pub const GSFK_KEY_Q: VirtualKeyCode = vk::GSFK_KEY_Q as VirtualKeyCode;
-pub const GSFK_KEY_R: VirtualKeyCode = vk::GSFK_KEY_R as VirtualKeyCode;
-pub const GSFK_KEY_S: VirtualKeyCode = vk::GSFK_KEY_S as VirtualKeyCode;
-pub const GSFK_KEY_T: VirtualKeyCode = vk::GSFK_KEY_T as VirtualKeyCode;
-pub const GSFK_KEY_U: VirtualKeyCode = vk::GSFK_KEY_U as VirtualKeyCode;
-pub const GSFK_KEY_V: VirtualKeyCode = vk::GSFK_KEY_V as VirtualKeyCode;
-pub const GSFK_KEY_W: VirtualKeyCode = vk::GSFK_KEY_W as VirtualKeyCode;
-pub const GSFK_KEY_X: VirtualKeyCode = vk::GSFK_KEY_X as VirtualKeyCode;
-pub const GSFK_KEY_Y: VirtualKeyCode = vk::GSFK_KEY_Y as VirtualKeyCode;
-pub const GSFK_KEY_Z: VirtualKeyCode = vk::GSFK_KEY_Z as VirtualKeyCode;
-
-pub const GSFK_KEY_BACKSPACE: VirtualKeyCode = vk::GSFK_KEY_BACKSPACE as VirtualkeyCode;
-pub const GSFK_KEY_SHIFT:VirtualKeyCode = vk::GSFK_KEY_SHIFT as VirtualKeyCode;
-pub const GSFK_KEY_TAB: VirtualKeyCode = vk::GSFK_KEY_TAB as VirtualkeyCode;
-
-pub fn get_key_name(code: VirtualKeyCode) {
-    _get_key_name(code);
+pub fn get_key_name(code: VirtualKeyCode) -> String {
+    winey::keyboard::get_key_name(code)
 }

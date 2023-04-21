@@ -25,15 +25,19 @@ fn main() {
     window.run(|event, control_flow| unsafe {
         match event {
             WindowEvent::Update => {}
-            WindowEvent::KeyDown(_) => {}
-            WindowEvent::KeyUp(_) => {}
+            WindowEvent::KeyEvent(code) => {
+                println!("{}",get_key_name(code));
+                if code == GSFK_KEY_TAB {
+                    std::process::exit(0);
+                }
+            }
             WindowEvent::RedrawRequested => {
                 gl::ClearColor(1.0, 0.0, 0.0, 1.0);
                 gl::Clear(gl::COLOR_BUFFER_BIT);
                 gl.swap_buffers();
             }
             WindowEvent::CloseRequested => {
-                control_flow.exit(0);
+                std::process::exit(0);
             }
         }
     })

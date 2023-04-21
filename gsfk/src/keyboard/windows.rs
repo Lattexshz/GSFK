@@ -39,13 +39,13 @@ pub mod vk {
     pub const GSFK_KEY_SHIFT: c_int = VK_SHIFT;
 }
 
-pub fn _get_key_name(code: VirtualKeyCode) {
+pub fn _get_key_name(code: VirtualKeyCode) -> String {
     unsafe {
         let mut name: [i8;32] = Default::default();
         let mut ptr = name.as_mut_ptr();
         let code = MapVirtualKeyA(code, MAPVK_VK_TO_VSC);
         GetKeyNameTextA((code << 16) as i32,ptr,32);
         let string = CStr::from_ptr(ptr as *const c_char).to_str().unwrap().to_owned();
-        println!("{}",string);
+        string
     }
 }
