@@ -54,7 +54,7 @@ extern "C" {
     void gsfkRunWindow(Window* window);
 
     // Callback setters
-    void gsfkSetUpdatedCallback(void (* callback)());
-    void gsfkSetRedrawRequestedCallback(void (* callback)());
-    void gsfkSetCloseRequestedCallback(void (* callback)());
+    void gsfkSetUpdatedCallback(Window *window,void (* callback)());
+    void gsfkSetRedrawRequestedCallback(Window *window,void (* callback)());
+    void gsfkSetCloseRequestedCallback(Window *window,void (* callback)());
 }

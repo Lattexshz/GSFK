@@ -30,8 +30,23 @@
 
 #include "../gsfk.h"
 
+typedef enum wc {
+  DoNotRound,
+  SmallRound,
+  Round
+} WindowCorner;
+
+typedef struct margin {
+    int left_width;
+    int right_width;
+    int top_height;
+    int bottom_height;
+} Margin;
+
 extern "C" {
+    void gsfkSetWindowCornerRadius(Window *window,WindowCorner corner);
     void gsfkSetWindowCapitonColor(Window *window,unsigned short r,unsigned short g,unsigned short b);
     void gsfkSetWindowBorderColor(Window *window,unsigned short r,unsigned short g,unsigned short b);
     void gsfkSetWindowTextColor(Window *window,unsigned short r,unsigned short g,unsigned short b);
+    void gsfkExtendWindowFrameIntoClientArea(Window *window,Margin margin);
 }

@@ -4,7 +4,7 @@ macro_rules! ref_from_ptr {
         if $ptr.is_null() {
             panic!("Passed pointer is null");
         } else {
-            unsafe { &*$ptr }
+            unsafe { &mut *$ptr }
         }
     };
 }
