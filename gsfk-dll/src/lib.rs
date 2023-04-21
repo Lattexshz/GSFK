@@ -198,3 +198,24 @@ pub extern "C" fn gsfkSetRedrawRequestedCallback(callback: REDRAWREQUESTEDCALLBA
 pub extern "C" fn gsfkSetCloseRequestedCallback(callback: CLOSEREQUESTEDCALLBACK) {
     REDRAW_REQUESTED.lock().unwrap().set(callback).unwrap();
 }
+
+// Extensions
+// Windows
+
+#[no_mangle]
+pub extern "C" fn gsfkSetWindowCapitonColor(window: *mut Window,r:u8,g:u8,b:u8) {
+    let window = ref_from_ptr!(window);
+    window.set_window_caption_color(r,g,b);
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkSetWindowBorderColor(window: *mut Window,r:u8,g:u8,b:u8) {
+    let window = ref_from_ptr!(window);
+    window.set_window_border_color(r,g,b);
+}
+
+#[no_mangle]
+pub extern "C" fn gsfkSetWindowTextColor(window: *mut Window,r:u8,g:u8,b:u8) {
+    let window = ref_from_ptr!(window);
+    window.set_window_text_color(r,g,b);
+}
