@@ -1,5 +1,6 @@
 use winey::WindowEvent;
 use gsfk::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
+use gsfk::keyboard::*;
 use gsfk::window::Window;
 use gsfk::WindowImplementation;
 
@@ -13,6 +14,8 @@ fn main() {
     let (window, opengl) = Window::new_with_opengl("OpenGL Window!", 500, 500, desc);
     let gl = opengl.get_api();
     gl.make_current();
+
+    get_key_name(GSFK_KEY_A);
 
     gl::load_with(|s| gl.get_proc_address(s));
 
