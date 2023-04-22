@@ -26,9 +26,16 @@ pub trait OpenGLAPIExt {
     fn get_proc_address(&self, addr: &str) -> *const c_void;
 }
 
+pub enum GLProfile {
+    Core,
+    Compatibility,
+    ES
+}
+
 pub struct OpenGLAPIDescription {
     pub version_major: u32,
     pub version_minor: u32,
+    pub profile: GLProfile
 }
 
 pub struct OpenGL {
