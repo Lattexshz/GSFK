@@ -15,6 +15,7 @@ pub type WindowRect = winey::WindowRect;
 pub type WindowLevel = winey::WindowLevel;
 pub type WindowType = winey::WindowType;
 pub type CursorIcon = winey::CursorIcon;
+pub type Cursor = winey::Cursor;
 
 #[repr(C)]
 pub struct Window {
@@ -94,8 +95,8 @@ impl WindowImplementation for Window {
         self.inner.set_window_type(type_);
     }
 
-    fn set_cursor_icon(&self, icon: CursorIcon) {
-        self.inner.set_cursor_icon(icon);
+    fn set_cursor(&self, cursor: Cursor) {
+        self.inner.set_cursor(cursor);
     }
 
     fn get_title(&self) -> String {
@@ -108,6 +109,10 @@ impl WindowImplementation for Window {
 
     fn get_window_rect(&self) -> WindowRect {
         self.inner.get_window_rect()
+    }
+
+    fn get_current_cursor(&self) -> Cursor {
+        self.inner.get_current_cursor()
     }
 }
 

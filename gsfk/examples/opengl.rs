@@ -1,5 +1,6 @@
 use winey::WindowEvent;
 use gsfk::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
+use gsfk::keyboard::*;
 use gsfk::window::Window;
 use gsfk::WindowImplementation;
 
@@ -14,6 +15,8 @@ fn main() {
     let gl = opengl.get_api();
     gl.make_current();
 
+    get_key_name(GSFK_KEY_A);
+
     gl::load_with(|s| gl.get_proc_address(s));
 
     gl.swap_interval(true);
@@ -22,15 +25,19 @@ fn main() {
     window.run(|event, control_flow| unsafe {
         match event {
             WindowEvent::Update => {}
-            WindowEvent::KeyDown(_) => {}
-            WindowEvent::KeyUp(_) => {}
+            WindowEvent::KeyEvent(code) => {
+                println!("{}",get_key_name(code));
+                if code == GSFK_KEY_TAB {
+                    std::process::exit(0);
+                }
+            }
             WindowEvent::RedrawRequested => {
                 gl::ClearColor(1.0, 0.0, 0.0, 1.0);
                 gl::Clear(gl::COLOR_BUFFER_BIT);
                 gl.swap_buffers();
             }
             WindowEvent::CloseRequested => {
-                control_flow.exit(0);
+                std::process::exit(0);
             }
         }
     })

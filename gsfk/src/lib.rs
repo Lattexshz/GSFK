@@ -3,6 +3,7 @@ pub use winey::WineyWindowImplementation as WindowImplementation;
 pub mod api;
 pub mod platform;
 pub mod window;
+pub mod keyboard;
 
 pub type WindowEvent = winey::WindowEvent;
 pub type ControlFlow = winey::window::ControlFlow;
