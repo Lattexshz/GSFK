@@ -1,5 +1,5 @@
 use crate::api::gl::sys::{wgl, wgl_extra, WGLARBFunctions};
-use crate::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
+use crate::api::gl::{GLProfile, OpenGLAPIDescription, OpenGLAPIExt};
 
 
 use std::ffi::{c_void, CString, OsStr};
@@ -58,6 +58,12 @@ impl _OpenGL {
             let old_ctx = wgl::CreateContext(hdc as wgl::types::HDC);
             wgl::MakeCurrent(hdc as wgl::types::HDC, old_ctx);
 
+            let profile = match desc.profile {
+                GLProfile::Core => wgl_extra::CONTEXT_CORE_PROFILE_BIT_ARB,
+                GLProfile::Compatibility => wgl_extra::CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
+                GLProfile::ES => wgl_extra::CONTEXT_ES2_PROFILE_BIT_EXT,
+            };
+
             let att = [
                 wgl_extra::CONTEXT_MAJOR_VERSION_ARB,
                 desc.version_major,
@@ -66,7 +72,7 @@ impl _OpenGL {
                 wgl_extra::CONTEXT_FLAGS_ARB,
                 0,
                 wgl_extra::CONTEXT_PROFILE_MASK_ARB,
-                wgl_extra::CONTEXT_CORE_PROFILE_BIT_ARB,
+                profile,
                 0,
             ];
 
