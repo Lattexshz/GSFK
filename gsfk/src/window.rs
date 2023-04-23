@@ -1,7 +1,6 @@
 use raw_window_handle::{
     HasRawDisplayHandle, HasRawWindowHandle, RawDisplayHandle, RawWindowHandle,
 };
-use winey::platform::{Margin, WindowCorner};
 use winey::window::ControlFlow;
 use winey::WindowEvent;
 
@@ -115,6 +114,9 @@ impl WindowImplementation for Window {
         self.inner.get_current_cursor()
     }
 }
+
+#[cfg(target_os = "windows")]
+use winey::platform::{Margin, WindowCorner};
 
 #[cfg(target_os = "windows")]
 impl crate::platform::WindowExtForWindows for Window {

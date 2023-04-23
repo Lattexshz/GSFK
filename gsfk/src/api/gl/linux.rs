@@ -1,10 +1,11 @@
-use crate::api::gl::{OpenGLAPIDescription, OpenGLAPIExt};
+use crate::api::gl::{GLProfile, OpenGLAPIDescription, OpenGLAPIExt};
 use safex::glx::{
     glx_choose_visual, glx_make_current, GLXContext, GLX_DEPTH_SIZE, GLX_DOUBLEBUFFER, GLX_NONE,
     GLX_RGBA,
 };
 use safex::xlib::{AsRaw, Display, Screen};
-use std::ffi::{c_ulong, c_void};
+use std::ffi::{c_int, c_ulong, c_void};
+use x11::glx::arb::{GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, GLX_CONTEXT_MAJOR_VERSION_ARB, GLX_CONTEXT_MINOR_VERSION_ARB, GLX_CONTEXT_PROFILE_MASK_ARB};
 
 pub struct _OpenGL {
     display: Display,
@@ -17,9 +18,14 @@ impl _OpenGL {
     pub fn new(window: c_ulong, desc: OpenGLAPIDescription) -> Self {
         let display = Display::open(None);
         let screen = Screen::default(&display);
+        let profile = match desc.profile {
+            GLProfile::Core => GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
+            GLProfile::Compatibility => GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
+            GLProfile::ES => 0
+        };
         let vi = glx_choose_visual(
             &display,
-            &mut [GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, GLX_NONE],
+            &mut [GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, GLX_CONTEXT_PROFILE_MASK_ARB,profile,GLX_CONTEXT_MAJOR_VERSION_ARB,desc.version_major as c_int,GLX_CONTEXT_MINOR_VERSION_ARB,desc.version_minor as c_int,GLX_NONE],
         )
         .unwrap();
 
